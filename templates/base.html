@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Your App{% endblock %}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #080808;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+
+        .left-sidebar {
+            width: 250px;
+            padding: 25px;
+            box-sizing: border-box;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .left-sidebar h1 {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Adjust the color and alpha value as needed */
+            padding-bottom: 10px; /* Adjust the padding as needed */
+        }
+
+        .left-sidebar a {
+            text-decoration: none;
+            color: #818181;
+            display: block;
+            padding: 10px;
+            transition: 0.3s;
+        }
+
+        .left-sidebar a:hover {
+            background-color: rgba(85, 85, 85, 0.398); /* Adjust the alpha (last) value for transparency */
+            color: rgb(245, 243, 243); /* Adjust the alpha (last) value for transparency */
+            border-radius: 5px;
+            background-image: linear-gradient(to right, rgba(240, 87, 212, 0.8), rgba(215, 89, 230, 0.8), rgba(112, 97, 228, 0.8), rgba(47, 130, 238, 0.8), rgba(76, 74, 185, 0.8), rgba(128, 0, 255, 0.8), rgba(251, 129, 251, 0.8));
+            background-size: 200% 100%;
+        }
+        .left-sidebar a.selected {
+            background-color: rgba(99, 95, 95, 0.291); /* Adjust the color as needed */
+            border-radius: 5px;
+            color: rgb(245, 243, 243); 
+        }
+
+        .right-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .card {
+            flex: 1;
+            background-color: #35343598;
+            color: #afa9a9;
+            padding: 20px;
+            margin-top: 30px;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.01); /* Increase the scale factor for more pronounced hover effect */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            
+        }
+        label {
+            margin-top: 10px;
+            margin-bottom: 15px;
+            
+        }
+
+        .card form {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Set the height of the form */
+        }
+
+        textarea {
+            width: 100%;
+            flex: 0.5; /* Use flex to make the textarea take up remaining space */
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: transparent; /* Set background color to transparent */
+            color: white;
+            border: 2px solid rgba(147, 55, 194, 0.8); /* Use border for color */
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(42, 41, 41, 0.571); /* Adjust the values as needed */
+            transition: box-shadow 0.3s, transform 0.3s;
+            
+        }
+
+        button:hover {
+            box-shadow: 0 8px 12px rgba(17, 17, 17, 0.253); /* Adjust the values as needed */
+            transform: scale(1.05); /* Increase the scale factor for a subtle hover effect */
+        }
+        .card form button {
+            display: block;
+            margin: 20px auto 0; /* Adjust the top margin as needed */
+        }
+        input[type="range"] {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #944396;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #944396;
+            cursor: pointer;
+        }
+        .box-container {
+        border: 1px solid #ccc; /* Border color and thickness */
+        padding: 10px; /* Padding inside the box */
+        border-radius: 5px; /* Border radius for rounded corners */
+        background-color: #f8f8f8; /* Background color */
+        margin-top: 10px; /* Adjust the margin as needed */
+        color: #080808;
+    }
+
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the slider and its associated value display element
+            const slider = document.getElementById('slider');
+            const sliderValue = document.getElementById('sliderValue');
+
+            // Update the displayed value when the slider value changes
+            slider.addEventListener('input', function () {
+                sliderValue.textContent = this.value;
+            });
+        });
+        
+
+        function copyQuestions() {
+        var questions = document.querySelectorAll('.box-container li');
+        var textToCopy = Array.from(questions).map(li => li.textContent).join('\n');
+        var textarea = document.createElement('textarea');
+        
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        
+        textarea.select();
+        document.execCommand('copy');
+        
+        document.body.removeChild(textarea);
+
+        /* Display copy feedback */
+        var copyFeedback = document.getElementById('copy-feedback');
+        copyFeedback.style.opacity = 1;
+
+        setTimeout(function() {
+            copyFeedback.style.opacity = 0;
+        }, 2000);
+    }
+    </script>
+    
+</head>
+<body>
+
+    <div class="main-container">
+        <aside class="left-sidebar">
+            <h1 style="display: flex; align-items: center;">
+                <img src="{{ url_for('static', filename='images/cute.png') }}" alt="Cute Logo" height="50" style="margin-right: 10px;">
+                GenQus.ai
+            </h1>
+            <a href="{{ url_for("base", option='home', site_id=site.id) }}" class="{% if selected == 'home' %}selected{% endif %}">Home</a>
+            <a href="{{ url_for("base", option='bool', site_id=site.id) }}" class="{% if selected == 'bool' %}selected{% endif %}">(Yes/No) Questions</a>
+            <a href="{{ url_for("base", option='mcq', site_id=site.id) }}" class="{% if selected == 'mcq' %}selected{% endif %}">MCQ Questions</a>
+            <a href="{{ url_for("base", option='faq', site_id=site.id) }}" class="{% if selected == 'faq' %}selected{% endif %}">FAQ Questions</a>
+            <a href="{{ url_for("base", option='para', site_id=site.id) }}" class="{% if selected == 'para' %}selected{% endif %}">Paraphrasing Questions</a>
+
+        </aside>
+
+        <main class="right-content">
+            <div class="card">
+                <!-- Left card with conditional form structure -->
+                {% if selected == 'bool' %}
+                    <form action="{{ url_for('base', option=selected, site_id=site.id) }}" method="post">
+                        <input type="hidden" name="selected_option" value="{{ selected }}">
+                        <p>Selected Option: {{ selected }}</p>
+                        <label for="input_text">Enter Text:</label>
+                        <textarea name="input_text" id="input_text" required>{{ request.form['input_text'] }}</textarea>
+                        <label for="slider">Choose a number (1-20):</label>
+                        <input type="range" id="slider" name="slider" min="1" max="20">
+                        <span id="sliderValue">11</span>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                {% elif selected == 'mcq' %}
+                    <!-- Another form structure for 'mcq' option -->
+                    <form action="{{ url_for('base', option=selected, site_id=site.id) }}" method="post">
+                        <input type="hidden" name="selected_option" value="{{ selected }}">
+                        <p>Selected Option: {{ selected }}</p>
+                        <label for="input_text">Enter Text:</label>
+                        <textarea name="input_text" id="input_text" required>{{ request.form['input_text'] }}</textarea>
+                        <br>
+                        <label for="slider">Choose a number (1-20):</label>
+                        <input type="range" id="slider" name="slider" min="1" max="20">
+                        <span id="sliderValue">11</span>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                {% elif selected == 'faq' %}
+                    <!-- Another form structure for 'faq' option -->
+                    <form action="{{ url_for('base', option=selected, site_id=site.id) }}" method="post">
+                        <input type="hidden" name="selected_option" value="{{ selected }}">
+                        <p>Selected Option: {{ selected }}</p>
+                        <label for="input_text">Enter Text:</label>
+                        <textarea name="input_text" id="input_text" required>{{ request.form['input_text'] }}</textarea>
+                        <br>
+                        <label for="slider">Choose a number (1-20):</label>
+                        <input type="range" id="slider" name="slider" min="1" max="20">
+                        <span id="sliderValue">11</span>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                {% elif selected == 'para' %}
+                    <!-- Another form structure for 'para' option -->
+                    <form action="{{ url_for('base', option=selected, site_id=site.id) }}" method="post">
+                        <input type="hidden" name="selected_option" value="{{ selected }}">
+                        <p>Selected Option: {{ selected }}</p>
+                        <label for="input_text">Enter Text:</label>
+                        <textarea name="input_text" id="input_text" required>{{ request.form['input_text'] }}</textarea>
+                        <br>
+                        <label for="slider">Choose a number (1-20):</label>
+                        <input type="range" id="slider" name="slider" min="1" max="20">
+                        <span id="sliderValue">11</span>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                {% else %}
+                    <!-- Default form structure or handle other cases -->
+                    <form action="{{ url_for('base', option=selected, site_id=site.id) }}" method="post">
+                        <input type="hidden" name="selected_option" value="{{ selected }}">
+                        <p>Selected Option: {{ selected }}</p>
+                        <label for="input_text">Enter Text:</label>
+                        <textarea name="input_text" id="input_text" required></textarea>
+                        <br>
+                        <label for="slider">Choose a number (1-20):</label>
+                        <input type="range" id="slider" name="slider" min="1" max="20">
+                        <span id="sliderValue">11</span>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                {% endif %}
+            </div>
+            <div class="card">
+                {% if selected == 'bool' %}
+                <!-- <p>{{ processed_text }}</p> -->
+                <h3>Boolean Questions:</h3>
+                <div class="box-container">
+                    <ul>
+                        {% for question in processed_text['Boolean Questions'] %}
+                            <li>{{ question }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>  
+                <br>
+                <button onclick="copyQuestions()">Copy Questions</button>       
+                {% elif selected == 'mcq' %}
+                    <!-- <p>{{ processed_text }}</p> -->
+                    <!-- <h3>Processed Text</h3> -->
+
+                    <!-- Display statement -->
+                    <!-- <p><strong>Statement:</strong> {{ processed_text.statement }}</p> -->
+                    <!-- Display questions -->
+                    <h4>MCQ Questions:</h4>
+                    <div class="box-container">
+
+                    <ol>
+                        {% for question in processed_text.questions %}
+                            <li>
+                                <p><strong>Question:</strong> {{ question.question_statement }}</p>
+                                <ul>
+                                    {% for option in question.options %}
+                                        <li>{{ option }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <p><strong>Answer:</strong> {{ question.answer }}</p>
+                                <p><strong>Context:</strong> {{ question.context }}</p>
+                            </li>
+                            <br>
+                        {% endfor %}
+                    </ol>
+                </div>
+                <br>
+                <button onclick="copyQuestions()">Copy Questions</button>       
+                                
+                    <!-- <p><strong>Time Taken:</strong> {{ processed_text.time_taken }}</p> -->
+                
+                
+                {% elif selected == 'faq' %}
+
+                <!-- <h1>Statement:</h1> -->
+                <!-- <p>{{ processed_text.statement }}</p> -->
+                <h2>FAQs:</h2>
+                <div class="box-container">
+                <ol>
+                    {% for question in processed_text.questions %}
+                        <li>
+                            <p><strong>Question:</strong> {{ question.Question }}</p>
+                            <p><strong>Answer:</strong> {{ question.Answer }}</p>
+                        </li>
+                        <br>
+                    {% endfor %}
+                </ol>
+                </div>
+                <br>
+                <button onclick="copyQuestions()">Copy Questions</button>  
+                {% elif selected == 'para' %}
+                <p>{{ processed_text }}</p>
+
+                {% else %}
+                <p>{{ processed_text }}</p>
+                {% endif %}
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

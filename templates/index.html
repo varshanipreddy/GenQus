@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question & Answer Generator App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #5469b6;
+            margin: 50px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            /* max-width: 600px; */
+            margin: 0 auto;
+            background-color: #f7f4ab;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px; /* Set your desired height here */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #5469b6;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #5469b6;
+            border-radius: 30px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Question & Answer Generator App</h1>
+    <form method="post" action="/" enctype="multipart/form-data">
+        <label for="input_text">Enter Text:</label>
+        <textarea name="input_text" id="input_text" required></textarea>
+        <br>
+        <!-- <label for="file">Upload Text File or PDF:</label>
+        <input type="file" name="file" id="file"> -->
+        <br>
+        <label for="options">Choose Function:</label>
+        <select name="options" id="options">
+            <option value="option1">Generate boolean (Yes/No) Questions</option>
+            <option value="option2">Generate MCQ Questions</option>
+            <option value="option3">Generate FAQ Questions</option>
+            <option value="option4">Paraphrasing Questions</option>
+        </select>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
